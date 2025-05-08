@@ -2,6 +2,8 @@ import machine
 from machine import Pin, ADC
 from time import sleep
 
+
+
 def init(index):
     pin_obj = [0] * 5 
     for i in range (0,5):
