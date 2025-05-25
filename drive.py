@@ -1,14 +1,12 @@
 from time import sleep_ms, ticks_us, ticks_ms
 
 class DRIVE:
-    def __init__(self, p_left, p_right, team, tof, threshold,stop_time = 99):
+    def __init__(self, p_left, p_right, tof, threshold,stop_time = 99):
         self.PL = p_left
         self.PR = p_right
-        self.mm_per_tick = 30 * 3.14159265358979323846 / 350
+        self.mm_per_tick = 30 * 3.14 / 350
         spacing = 90
-        self.deg_per_tick = (self.mm_per_tick*360)/(spacing * 3.14159265358979323846)
-        if team :
-            self.deg_per_tick = self.deg_per_tick *-1
+        self.deg_per_tick = (self.mm_per_tick*360)/(spacing * 3.14)
         self.tof = tof
         self.obstacle = False
         self.threshold = threshold

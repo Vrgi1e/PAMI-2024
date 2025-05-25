@@ -15,4 +15,22 @@ def print_(pin_obj):
     for i in range (0,5):
         print(pin_obj[i].read()*3.3/4095)
     print()
-    sleep(0.1) 
+    sleep(0.1)
+    
+def read(pin_obj):
+    values = [0] * 5
+    for i in range (0,5):
+        values[i] = pin_obj[i].read()
+    return values
+
+def read_bool(pin_obj, treshold):
+    values = [0]*5
+    print(values)
+    
+    for i in range (0,5):
+        print(values[i])
+        if values [i] > treshold :
+            values [i] = 1
+        else :
+            values[i] = 0
+    return values
