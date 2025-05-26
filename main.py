@@ -10,17 +10,7 @@ import time
 import vl53l0x
 import trct
 import f
-import network
-def start() : return 1
-IS_SUPER_STAR = True 
-ID_ROBOT = 1
-DIST_BORD = 50 #distance au dessus de la quelle la superstar considère être arrivé au bord de la scène
-IR_TRESHOLD = 2500 #signal > IR_TRESHOLD => blanc
-SET_POINT = 3
-SIGNAL_DEPART = "top"
-ssid = "SiERA"
-password = "poupoule"
-
+import const
 
 #i2c
 i2c=SoftI2C(scl=Pin(22),sda=Pin(21), freq=40000)
@@ -59,46 +49,34 @@ time.sleep(0.5)
 #socket
 lcd.clear()
 lcd.putstr("setup wifi")
-# Créer une interface Wi-Fi station
-wlan = network.WLAN(network.STA_IF)
-wlan.active(True)
-wlan.ifconfig(('192.168.0.142','192.168.0.1','255.255.255.0', '192.168.0.1'))
-wlan.connect(ssid, password)
-
-# Attendre la connexion
-while not wlan.isconnected():
-    lcd.clear()
-    lcd.putstr("Connexion en cours...")
-    time.sleep(1)
-    
-lcd.clear()
-lcd.putstr("Connecté ! Adresse IP :" + str(wlan.ifconfig()[0]))
-
-socket=usocket.socket(usocket.AF_INET,usocket.SOCK_DGRAM)
-print("WLAN connecté :", wlan.isconnected())
-print("Adresse IP :", wlan.ifconfig())
-socket.bind(('0.0.0.0', 4000))
+socket = f.setup_wifi()
 lcd.clear()  
 lcd.putstr("en attente du signal...")
 data = ""
-print(SIGNAL_DEPART in data)
-while not (SIGNAL_DEPART in data):
+
+while not (const.SIGNAL_DEPART in data): #TODO ajouter tirette
     data = socket.recv(2048)  # Taille max du message
     data = data.decode()
-    print(SIGNAL_DEPART in data)
+    print(const.SIGNAL_DEPART in data)
     print(data)
 print("ok")
 lcd.clear()
 lcd.putstr("TOP !")
 
 
-f.suivi_ligne(p_left, p_right,pin_ir,pin_values, tof,IS_SUPER_STAR,ID_ROBOT,DIST_BORD)
+f.suivi_ligne(p_left, p_right,pin_ir,pin_values, tof)
+
 motor_left.speed(0)
 motor_right.speed(0)
-        
-if IS_SUPER_STAR:
-    f.avancer_bord()
+
+if IS_SUPER_STAR: #TODO tester les 2 comportements (superstar ou fan)
+    lcd.clear()
+    lcd.putstr("CAN'T STOP ADDICTED TO THE SHINDING !") #TODO afficher un truc mieux jsp
+    f.avancer_bord(drive)
     f.finish_super_star(servoA,servoB)
-else : 
-    f.go_zone()
+else :
+    lcd.clear()
+    lcd.move_to(1,6)
+    lcd.putstr("OUE OUE") #TODO pareil
+    f.go_zone(drive)
     f.finish_suporter(servoA,servoB)

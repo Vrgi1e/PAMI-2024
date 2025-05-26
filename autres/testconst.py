@@ -1,0 +1,11 @@
+import const
+print(const.IS_SUPER_STAR)
+print(const.ID_ROBOT)
+print(const.DIST_BORD)
+print(const.DIST_OBST)
+print(const.IR_TRESHOLD)
+print(const.SET_POINT)
+print(const.SIGNAL_DEPART)
+print(const.ssid)
+print(const.password)
+print(const.TEAM)
