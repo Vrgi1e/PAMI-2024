@@ -49,7 +49,7 @@ time.sleep(0.5)
 #socket
 lcd.clear()
 lcd.putstr("setup wifi")
-socket = f.setup_wifi()
+socket = f.setup_wifi(lcd)
 lcd.clear()  
 lcd.putstr("en attente du signal...")
 data = ""
@@ -69,7 +69,7 @@ f.suivi_ligne(p_left, p_right,pin_ir,pin_values, tof)
 motor_left.speed(0)
 motor_right.speed(0)
 
-if IS_SUPER_STAR: #TODO tester les 2 comportements (superstar ou fan)
+if const.IS_SUPER_STAR: #TODO tester les 2 comportements (superstar ou fan)
     lcd.clear()
     lcd.putstr("CAN'T STOP ADDICTED TO THE SHINDING !") #TODO afficher un truc mieux jsp
     f.avancer_bord(drive)

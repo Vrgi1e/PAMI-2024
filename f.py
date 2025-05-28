@@ -5,6 +5,7 @@ from encoder_N20_esp import PID
 import trct
 import const
 import network
+import usocket
 
 def finish_supporter(motorA, motorB):
     while True :
@@ -44,8 +45,8 @@ def suivi_ligne(motorA,motorB,pin_ir,pin_values,tof):
     nb_croisement = 0
     setpoint = 3
     avg = 3
-    print("nb_croisements :" + str(nb_croisements))
-    while (const.IS_SUPERSTAR and tof.read()< const.DIST_BORD or (not const.IS_SUPERSTAR) and (nb_croisements < const.ID_ROBOT or tof.read() > const.DIST_OBST)) :
+    print("nb_croisements :" + str(nb_croisement))
+    while (const.IS_SUPER_STAR and tof.read()< const.DIST_BORD or (not const.IS_SUPER_STAR) and (nb_croisements < const.ID_ROBOT or tof.read() > const.DIST_OBST)) :
         temp = get_avg(pin_ir,pin_values)
         if temp != 0 : avg = temp 
         sleep(0.1)
@@ -59,22 +60,22 @@ def suivi_ligne(motorA,motorB,pin_ir,pin_values,tof):
         print(str(left_motor_speed)+ " " +str(right_motor_speed) + " " + str(avg)+ " " +str(tof.read()))
         motorA.setSpeed(left_motor_speed)
         motorB.setSpeed(right_motor_speed)
-        if (pin_ir[2]  >= const.IR_TRESHOLD && pin_ir[4] >= const.IR_TRESHOLD)#TODO tester si les marques de zone sont bien détectés (celles ci : ═╬═)
-            nb_croisement += 1
-            print ("marque detecté " + str(nb_croisement))
+        if (pin_ir[2]  > const.IR_TRESHOLD) and (pin_ir[4] > const.IR_TRESHOLD):#TODO tester si les marques de zone sont bien détectés (celles ci : ═╬═)
+           nb_croisement += 1
+           print ("marque detecté " + str(nb_croisement))
     motorA.setSpeed(0)
     motorB.setSpeed(0)        
 
 def avancer_bord(drive):
     drive.forward(100, False) #TODO régler la distancepour s'approcher du bord
 def go_zone(drive, team):
-    if team = "orange" :
+    if team == "orange" :
         drive.turne(90) #TODO doit trouner à gauche (-90 sinon)
         drive.forward(100) #TODO régler la distance pour aller dans la zone 
-    if team = "bleu" 
+    elif team == "bleu" :
         drive.turne(-90) #TODO doit trouner à droite (90 sinon)
         drive.forward(100) #TODO régler la distance pour aller dans la zone
-def setup_wifi()
+def setup_wifi(lcd):
     # Créer une interface Wi-Fi station
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
@@ -85,7 +86,7 @@ def setup_wifi()
     while not wlan.isconnected():
         lcd.clear()
         lcd.putstr("Connexion en cours...")
-        time.sleep(1)
+        sleep(1)
     
     lcd.clear()
     lcd.putstr("Connecté ! Adresse IP :" + str(wlan.ifconfig()[0]))
